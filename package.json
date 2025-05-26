@@ -1,5 +1,5 @@
 {
-  "name": "api-ppob",
+  "name": "api-jamnas-htci",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -37,6 +37,5 @@
     "short-unique-id": "^5.0.3",
     "uuid": "^8.2.0",
     "winston": "^3.8.2"
-  },
-  "description": ""
+  }
 }
