@@ -61,15 +61,17 @@ module.exports = {
       const orderItems = [];
 
       for (const item of items) {
-        const orderItemData = {
-          order_id: orderId,
-          product_id: item.product_id,
-          size_id: item.size_id,
-          qty: item.qty,
-        };
+        for (const size of item.sizes) {
+          const orderItemData = {
+            order_id: orderId,
+            size_id: size.id,
+            qty: size.qty,
+            product_id: item.product_id,
+          };
 
-        await Order.orderItemMp(orderItemData);
-        orderItems.push(orderItemData);
+          await Order.orderItemMp(orderItemData);
+          orderItems.push(orderItemData);
+        }
       }
 
       return misc.response(res, 200, false, "Order created successfully", {

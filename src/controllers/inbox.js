@@ -23,7 +23,29 @@ module.exports = {
         var status = order.status;
         var createdAt = order.created_at;
 
-        var products = await Order.orderItemByOrderId(id);
+        var rows = await Order.orderItemByOrderId(id);
+
+        const products = [];
+
+        for (const row of rows) {
+          let product = products.find((p) => p.product_id === row.product_id);
+
+          if (!product) {
+            product = {
+              product_id: row.product_id,
+              title: row.title,
+              img: row.img,
+              sizes: [],
+            };
+            products.push(product);
+          }
+
+          product.sizes.push({
+            id: row.size_id,
+            size: row.size,
+            qty: parseInt(row.qty),
+          });
+        }
 
         var payments = await Payment.checkPaymentIsExist(invoiceValue);
         var amount = payments.length == 0 ? "0" : payments[0].amount;
@@ -93,7 +115,29 @@ module.exports = {
         var status = order.status;
         var createdAt = order.created_at;
 
-        var products = await Order.orderItemByOrderId(id);
+        var rows = await Order.orderItemByOrderId(id);
+
+        const products = [];
+
+        for (const row of rows) {
+          let product = products.find((p) => p.product_id === row.product_id);
+
+          if (!product) {
+            product = {
+              product_id: row.product_id,
+              title: row.title,
+              img: row.img,
+              sizes: [],
+            };
+            products.push(product);
+          }
+
+          product.sizes.push({
+            id: row.size_id,
+            size: row.size,
+            qty: parseInt(row.qty),
+          });
+        }
 
         var payments = await Payment.checkPaymentIsExist(invoiceValue);
         var amount = payments.length == 0 ? "0" : payments[0].amount;
