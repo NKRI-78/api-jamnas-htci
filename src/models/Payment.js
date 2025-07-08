@@ -16,6 +16,19 @@ module.exports = {
     });
   },
 
+  getListByPaymentCode: (id) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT id, name, nameCode, logo, platform, fee FROM Channels WHERE nameCode = ?`;
+      connPayment.query(query, id, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
   storePayment: (data) => {
     return new Promise((resolve, reject) => {
       const query = `INSERT INTO orders (email, name, club, date, detail_address, size_xl, size_s, size_m, size_l, 
@@ -52,11 +65,43 @@ module.exports = {
     });
   },
 
+  checkPaymentIsExist: (orderId) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT orderId FROM Payments WHERE orderId = ?`;
+
+      const values = [orderId];
+
+      connPayment.query(query, values, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
   updatePaymentPaid: (orderId) => {
     return new Promise((resolve, reject) => {
       const query = `UPDATE orders SET status = 2 WHERE invoice_value = ?`;
 
       connMP.query(query, orderId, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
+  updateInvoiceValue: (invoiceValue, orderId) => {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE orders SET invoice_value = ? WHERE id = ?`;
+
+      const values = [invoiceValue, orderId];
+
+      connMP.query(query, values, (e, result) => {
         if (e) {
           reject(new Error(e));
         } else {

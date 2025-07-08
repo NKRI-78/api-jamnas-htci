@@ -23,9 +23,14 @@ module.exports = {
     const { payment_code, channel_id, email } = req.body;
 
     var totalAmount = 0;
+
+    var id = "";
+    var phone = "";
     var invoiceValue = "";
 
     var items = await Order.orderItemByUser(email);
+
+    var payments = await Payment.getListByPaymentCode(payment_code);
 
     try {
       if (typeof payment_code == "undefined" || payment_code == "") {
@@ -42,11 +47,24 @@ module.exports = {
 
       for (const item of items) {
         totalAmount += item.price * item.qty;
+
+        id = item.id;
         invoiceValue = item.invoice_value;
+        phone = item.phone;
       }
 
       if (invoiceValue == "") {
         throw new Error("invoice_value is required");
+      }
+
+      var checkPaymentIsExist = await Payment.checkPaymentIsExist(invoiceValue);
+
+      if (checkPaymentIsExist.length != 0) {
+        const randomNum =
+          Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
+        invoiceValue = `MRHPUTIH-${phone}${randomNum}`;
+
+        await Payment.updateInvoiceValue(invoiceValue, id);
       }
 
       const callbackUrl = process.env.CALLBACK_MP;
@@ -88,7 +106,9 @@ module.exports = {
         payment_access: paymentAccess,
         payment_type: paymentType,
         payment_expire: paymentExpire,
+        bank: payments.length == 0 ? {} : payments[0],
       });
+      misc.response(res, 400, false, {});
     } catch (e) {
       console.error(e);
       misc.response(res, 400, true, e.message);

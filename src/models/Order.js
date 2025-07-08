@@ -62,7 +62,8 @@ module.exports = {
   },
   orderItemByUser: (userEmail) => {
     return new Promise((resolve, reject) => {
-      const query = `SELECT o.invoice_value, sp.price, oi.qty FROM order_items oi 
+      const query = `SELECT o.id, o.invoice_value, u.phone, sp.price, oi.qty 
+      FROM order_items oi 
       INNER JOIN orders o ON o.id = oi.order_id
       INNER JOIN users u ON u.id = o.user_id
       INNER JOIN size_prices sp ON sp.id = oi.size_id
