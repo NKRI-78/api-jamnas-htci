@@ -18,51 +18,8 @@ module.exports = {
     }
   },
 
-  storeMerahPutih: async (req, res) => {
-    const {
-      email,
-      name,
-      club,
-      date,
-      detail_address,
-      phone,
-      size_xl,
-      size_s,
-      size_m,
-      size_l,
-      size_2xl,
-      size_3xl,
-      size_4xl,
-      size_5xl,
-    } = req.body;
-
+  storeMp: async (req, res) => {
     try {
-      var invoiceValue =
-        `JAMNASHTCI-` +
-        date.replace(/[^a-zA-Z0-9\s]/g, "") +
-        "-" +
-        (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000);
-
-      var dataPayment = {
-        email: email,
-        name: name,
-        club: club,
-        date: date,
-        detail_address: detail_address,
-        phone: phone,
-        order_id: invoiceValue,
-        size_xl: size_xl,
-        size_s: size_s,
-        size_m: size_m,
-        size_l: size_l,
-        size_2xl: size_2xl,
-        size_3xl: size_3xl,
-        size_4xl: size_4xl,
-        size_5xl: size_5xl,
-      };
-
-      await Payment.storePayment(dataPayment);
-
       misc.response(res, 200, false, "", {});
     } catch (e) {
       console.log(e);
