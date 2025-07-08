@@ -108,7 +108,6 @@ module.exports = {
         payment_expire: paymentExpire,
         bank: payments.length == 0 ? {} : payments[0],
       });
-      misc.response(res, 400, false, {});
     } catch (e) {
       console.error(e);
       misc.response(res, 400, true, e.message);
