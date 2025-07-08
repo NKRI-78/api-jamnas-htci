@@ -39,7 +39,7 @@ module.exports = {
   orderMp: (data) => {
     return new Promise((resolve, reject) => {
       const query = `INSERT INTO orders (address, date, club, status, invoice_value, user_id) 
-                VALUES (?, ?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?, ?, ?)`;
 
       const values = [
         data.address,
