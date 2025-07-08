@@ -29,6 +29,19 @@ module.exports = {
     });
   },
 
+  getListByPaymentChannel: (id) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT id, name, nameCode, logo, platform, fee FROM Channels WHERE id = ?`;
+      connPayment.query(query, id, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
   storePayment: (data) => {
     return new Promise((resolve, reject) => {
       const query = `INSERT INTO orders (email, name, club, date, detail_address, size_xl, size_s, size_m, size_l, 
@@ -67,7 +80,7 @@ module.exports = {
 
   checkPaymentIsExist: (orderId) => {
     return new Promise((resolve, reject) => {
-      const query = `SELECT orderId FROM Payments WHERE orderId = ?`;
+      const query = `SELECT orderId, grossAmount AS amount, ChannelId, data, expire FROM Payments WHERE orderId = ?`;
 
       const values = [orderId];
 

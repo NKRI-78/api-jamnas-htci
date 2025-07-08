@@ -1,6 +1,23 @@
 const connMP = require("../configs/db_web_merah_putih");
 
 module.exports = {
+  orderListMpByEmail: (email) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT o.invoice_value, os.name AS status
+      FROM orders o 
+      INNER JOIN users u ON u.id = o.user_id 
+      INNER JOIN order_statuses os ON os.id = o.status
+      WHERE u.email = ?`;
+
+      connMP.query(query, email, (e, results) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  },
   orderListMp: () => {
     return new Promise((resolve, reject) => {
       const query = `
