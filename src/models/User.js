@@ -9,7 +9,7 @@ module.exports = {
       WHERE id IN (?)
     `;
       connMP.query(query, [userIds], (e, results) => {
-        if (err) return reject(e);
+        if (e) return reject(e);
         resolve(results);
       });
     });
