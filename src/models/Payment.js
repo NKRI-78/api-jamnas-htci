@@ -56,20 +56,6 @@ module.exports = {
     return new Promise((resolve, reject) => {
       const query = `UPDATE orders SET status = 2 WHERE invoice_value = ?`;
 
-      conn.query(query, orderId, (e, result) => {
-        if (e) {
-          reject(new Error(e));
-        } else {
-          resolve(result);
-        }
-      });
-    });
-  },
-
-  updatePaymentPaid: (orderId) => {
-    return new Promise((resolve, reject) => {
-      const query = `UPDATE orders SET status = 2 WHERE invoice_value = ?`;
-
       connMP.query(query, orderId, (e, result) => {
         if (e) {
           reject(new Error(e));

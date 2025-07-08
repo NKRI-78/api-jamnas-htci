@@ -1,4 +1,5 @@
 const connMP = require("../configs/db_web_merah_putih");
+const order = require("../controllers/order");
 
 module.exports = {
   getBalance: () => {
@@ -23,6 +24,21 @@ module.exports = {
           reject(new Error(e));
         }
         resolve(results);
+      });
+    });
+  },
+  updatePaymentPaid: (status, orderId) => {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE orders SET status = ? WHERE id = ?`;
+
+      const values = [status, orderId];
+
+      connMP.query(query, values, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
+        }
       });
     });
   },

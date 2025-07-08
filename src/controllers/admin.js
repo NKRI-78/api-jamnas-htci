@@ -1,9 +1,26 @@
 const misc = require("../helpers/response");
 const Admin = require("../models/Admin");
 const Order = require("../models/Order");
+const Payment = require("../models/Payment");
 const User = require("../models/User");
 
 module.exports = {
+  UpdatePayment: async (req, res) => {
+    const { status, order_id } = req.body;
+
+    try {
+      await Admin.updatePaymentPaid(status, order_id);
+
+      misc.response(res, 200, false, "", {
+        order_id: order_id,
+        status: status,
+      });
+    } catch (e) {
+      console.error(e);
+      misc.response(res, 400, true, e.message || "Something went wrong");
+    }
+  },
+
   BalanceMp: async (_, res) => {
     try {
       // 1) Get all user balances
