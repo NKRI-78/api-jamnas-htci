@@ -141,15 +141,36 @@ module.exports = {
   },
   orderItemByUser: (userEmail) => {
     return new Promise((resolve, reject) => {
-      const query = `SELECT o.id, o.invoice_value, u.phone, sp.price, oi.qty 
-      FROM order_items oi 
-      INNER JOIN orders o ON o.id = oi.order_id
-      INNER JOIN users u ON u.id = o.user_id
-      INNER JOIN size_prices sp ON sp.id = oi.size_id
-      WHERE u.email = ? AND o.status = ?
-      ORDER BY o.id DESC LIMIT 1`;
+      const query =  `SELECT 
+        o.id, 
+        o.invoice_value, 
+        u.phone, 
+        p.title,
+        sp.price, 
+        sp.size,
+        oi.qty 
+      FROM 
+        orders o
+      JOIN 
+        users u ON u.id = o.user_id
+      JOIN 
+        order_items oi ON oi.order_id = o.id
+      JOIN 
+        products p ON p.id = oi.product_id
+      JOIN 
+        size_prices sp ON sp.id = oi.size_id
+      WHERE 
+        o.id = (
+          SELECT id 
+          FROM orders 
+          WHERE user_id = u.id AND status = 1
+          ORDER BY id DESC 
+          LIMIT 1
+        )
+        AND u.email = ?;
+      `;
 
-      const values = [userEmail, 1];
+      const values = [userEmail];
 
       connMP.query(query, values, (e, result) => {
         if (e) {

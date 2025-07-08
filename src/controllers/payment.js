@@ -53,9 +53,7 @@ module.exports = {
         phone = item.phone;
       }
 
-      if (invoiceValue == "") {
-        throw new Error("invoice_value is required");
-      }
+      if (invoiceValue == "") throw new Error("invoice_value is required");
 
       var checkPaymentIsExist = await Payment.checkPaymentIsExist(invoiceValue);
 
@@ -102,7 +100,7 @@ module.exports = {
 
       misc.response(res, 200, false, "", {
         order_id: invoiceValue,
-        amount: totalAmount,
+        amount: result.data.data.totalAmount,
         payment_access: paymentAccess,
         payment_type: paymentType,
         payment_expire: paymentExpire,
