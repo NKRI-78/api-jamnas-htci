@@ -1,4 +1,4 @@
-const connMerahPutih = require("../configs/db_web_merah_putih");
+const connMP = require("../configs/db_web_merah_putih");
 
 module.exports = {
   getUsersMp: async (userIds) => {
@@ -8,8 +8,8 @@ module.exports = {
       FROM users 
       WHERE id IN (?)
     `;
-      connMerahPutih.query(query, [userIds], (err, results) => {
-        if (err) return reject(err);
+      connMP.query(query, [userIds], (e, results) => {
+        if (err) return reject(e);
         resolve(results);
       });
     });
@@ -19,7 +19,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       const query = `SELECT id, name, email, phone FROM users WHERE id = ?`;
 
-      connMerahPutih.query(query, id, (e, result) => {
+      connMP.query(query, id, (e, result) => {
         if (e) {
           reject(new Error(e));
         } else {
@@ -35,7 +35,7 @@ module.exports = {
 
       const values = [data.name, data.email, data.phone];
 
-      connMerahPutih.query(query, values, (e, result) => {
+      connMP.query(query, values, (e, result) => {
         if (e) {
           reject(new Error(e));
         } else {

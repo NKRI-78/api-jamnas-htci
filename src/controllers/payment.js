@@ -5,6 +5,7 @@ const moment = require("moment-timezone");
 const axios = require("axios");
 
 const Payment = require("../models/Payment");
+const Order = require("../models/Order");
 
 module.exports = {
   getList: async (_, res) => {
@@ -19,10 +20,77 @@ module.exports = {
   },
 
   storeMp: async (req, res) => {
+    const { payment_code, channel_id, email } = req.body;
+
+    var totalAmount = 0;
+    var invoiceValue = "";
+
+    var items = await Order.orderItemByUser(email);
+
     try {
-      misc.response(res, 200, false, "", {});
+      if (typeof payment_code == "undefined" || payment_code == "") {
+        throw new Error("Field payment_code is required");
+      }
+
+      if (typeof channel_id == "undefined" || channel_id == "") {
+        throw new Error("Field channel_id is required");
+      }
+
+      if (typeof email == "undefined" || email == "") {
+        throw new Error("Field email is required");
+      }
+
+      for (const item of items) {
+        totalAmount += item.price * item.qty;
+        invoiceValue = item.invoice_value;
+      }
+
+      if (invoiceValue == "") {
+        throw new Error("invoice_value is required");
+      }
+
+      const callbackUrl = process.env.CALLBACK_MP;
+
+      const payload = {
+        channel_id: channel_id,
+        orderId: invoiceValue,
+        amount: totalAmount,
+        app: "MRHPUTIH",
+        callbackUrl: callbackUrl,
+      };
+
+      const config = {
+        method: "POST",
+        url: process.env.PAY_MIDTRANS,
+        data: payload,
+      };
+
+      const result = await axios(config);
+
+      let paymentAccess, paymentType, paymentExpire;
+
+      if (["gopay", "shopee", "ovo", "dana"].includes(payment_code)) {
+        paymentAccess = result.data.data.data.actions[0].url;
+        paymentType = "emoney";
+        paymentExpire = moment()
+          .tz("Asia/Jakarta")
+          .add(30, "minutes")
+          .format("YYYY-MM-DD HH:mm:ss");
+      } else {
+        paymentAccess = result.data.data.data.vaNumber;
+        paymentType = "va";
+        paymentExpire = result.data.data.expire;
+      }
+
+      misc.response(res, 200, false, "", {
+        order_id: invoiceValue,
+        amount: totalAmount,
+        payment_access: paymentAccess,
+        payment_type: paymentType,
+        payment_expire: paymentExpire,
+      });
     } catch (e) {
-      console.log(e);
+      console.error(e);
       misc.response(res, 400, true, e.message);
     }
   },

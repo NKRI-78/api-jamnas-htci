@@ -1,4 +1,4 @@
-const connMerahPutih = require("../configs/db_web_merah_putih");
+const connMP = require("../configs/db_web_merah_putih");
 
 module.exports = {
   getBalance: () => {
@@ -18,9 +18,9 @@ module.exports = {
       GROUP BY u.id, u.name, u.email, u.phone
     `;
 
-      connMerahPutih.query(query, (err, results) => {
-        if (err) {
-          return reject(new Error(`Database error: ${err.message}`));
+      connMP.query(query, (e, results) => {
+        if (e) {
+          reject(new Error(e));
         }
         resolve(results);
       });

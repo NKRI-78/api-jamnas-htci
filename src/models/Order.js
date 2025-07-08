@@ -1,4 +1,4 @@
-const connMerahPutih = require("../configs/db_web_merah_putih");
+const connMP = require("../configs/db_web_merah_putih");
 
 module.exports = {
   orderListMp: () => {
@@ -26,7 +26,7 @@ module.exports = {
       INNER JOIN size_prices sp ON sp.id = oi.size_id
     `;
 
-      connMerahPutih.query(query, (err, results) => {
+      connMP.query(query, (err, results) => {
         if (err) {
           reject(new Error(e));
         } else {
@@ -50,11 +50,30 @@ module.exports = {
         data.user_id,
       ];
 
-      connMerahPutih.query(query, values, (e, result) => {
+      connMP.query(query, values, (e, result) => {
         if (e) {
           reject(new Error(e));
         } else {
           resolve(result.insertId);
+        }
+      });
+    });
+  },
+  orderItemByUser: (userEmail) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT o.invoice_value, sp.price, oi.qty FROM order_items oi 
+      INNER JOIN orders o ON o.id = oi.order_id
+      INNER JOIN users u ON u.id = o.user_id
+      INNER JOIN size_prices sp ON sp.id = oi.size_id
+      WHERE u.email = ? AND o.status = ?`;
+
+      const values = [userEmail, 1];
+
+      connMP.query(query, values, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
         }
       });
     });
@@ -66,7 +85,7 @@ module.exports = {
 
       const values = [data.order_id, data.product_id, data.size_id, data.qty];
 
-      connMerahPutih.query(query, values, (e, result) => {
+      connMP.query(query, values, (e, result) => {
         if (e) {
           reject(new Error(e));
         } else {
