@@ -1,11 +1,11 @@
-const express = require("express")
+const express = require("express");
 
-const payment = require("../controllers/payment")
+const payment = require("../controllers/payment");
 
-const Route = express.Router()
+const Route = express.Router();
 
-Route
-    .get("/list", payment.getList)
-    .post("/store", payment.storePayment)
+Route.get("/list", payment.getList)
+  .post("/store-merah-putih", payment.storeMerahPutih)
+  .post("/store", payment.storeHtci);
 
-module.exports = Route
+module.exports = Route;
