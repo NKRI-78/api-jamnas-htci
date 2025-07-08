@@ -55,6 +55,7 @@ module.exports = {
 
       // 5) Build final response
       const dataOrder = orders.map((order) => ({
+        id: order.id,
         title: order.product_title,
         img: order.product_image,
         measure: {

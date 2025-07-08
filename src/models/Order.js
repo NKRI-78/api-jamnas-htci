@@ -5,6 +5,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       const query = `
       SELECT 
+        o.id,
         o.user_id,
         o.id AS order_id,
         o.invoice_value,
