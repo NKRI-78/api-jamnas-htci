@@ -146,7 +146,8 @@ module.exports = {
       INNER JOIN orders o ON o.id = oi.order_id
       INNER JOIN users u ON u.id = o.user_id
       INNER JOIN size_prices sp ON sp.id = oi.size_id
-      WHERE u.email = ? AND o.status = ?`;
+      WHERE u.email = ? AND o.status = ?
+      ORDER BY o.id DESC`;
 
       const values = [userEmail, 1];
 
