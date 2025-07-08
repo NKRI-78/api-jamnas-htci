@@ -44,7 +44,6 @@ module.exports = {
       misc.response(res, 400, true, e.message || "Something went wrong");
     }
   },
-
   OrderListMp: async (_, res) => {
     try {
       // 1) Get all orders
@@ -58,7 +57,7 @@ module.exports = {
       const userIds = [...new Set(orders.map((order) => order.user_id))];
 
       // 3) Batch fetch users by IDs
-      const users = await User.getUsersMp(userIds); // <<< You need to create this!
+      const users = userIds.length > 0 ? await User.getUsersMp(userIds) : [];
 
       // 4) Map users by ID for fast lookup
       const userMap = {};
@@ -70,27 +69,54 @@ module.exports = {
         };
       }
 
-      // 5) Build final response
-      const dataOrder = orders.map((order) => ({
-        id: order.id,
-        title: order.product_title,
-        img: order.product_image,
-        measure: {
+      // 5) Group orders by order_id and merge products with measures
+      const groupedOrders = {};
+
+      for (const order of orders) {
+        const orderId = order.id;
+
+        if (!groupedOrders[orderId]) {
+          groupedOrders[orderId] = {
+            id: orderId,
+            invoice: order.invoice_value,
+            status: order.status_name,
+            address: order.address,
+            date: order.date,
+            club: order.club,
+            user: userMap[order.user_id] || {
+              name: null,
+              phone: null,
+              email: null,
+            },
+            items: [],
+          };
+        }
+
+        // Find if this product already exists in items[]
+        let product = groupedOrders[orderId].items.find(
+          (item) => item.product_id === order.product_id
+        );
+
+        if (!product) {
+          // If not found, create it
+          product = {
+            product_id: order.product_id,
+            title: order.product_title,
+            img: order.product_image,
+            measures: [],
+          };
+          groupedOrders[orderId].items.push(product);
+        }
+
+        // Push this measure
+        product.measures.push({
           size: order.size_name,
-          qty: order.item_qty,
+          qty: parseInt(order.item_qty, 10),
           price: parseInt(order.size_price, 10),
-        },
-        status: order.status_name,
-        invoice: order.invoice_value,
-        address: order.address,
-        date: order.date,
-        club: order.club,
-        user: userMap[order.user_id] || {
-          name: null,
-          phone: null,
-          email: null,
-        },
-      }));
+        });
+      }
+
+      const dataOrder = Object.values(groupedOrders);
 
       return misc.response(res, 200, false, "", dataOrder);
     } catch (error) {
