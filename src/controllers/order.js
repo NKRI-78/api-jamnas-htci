@@ -43,7 +43,8 @@ module.exports = {
 
       // ✅ Generate invoice number
       const randomNum = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
-      const invoiceValue = `MRHPUTIH-${phone}${randomNum}`;
+      const lastDigits = phone.slice(-5);
+      const invoiceValue = `MRHPUTIH-${lastDigits}${randomNum}`;
 
       // ✅ Prepare order data
       const orderData = {
