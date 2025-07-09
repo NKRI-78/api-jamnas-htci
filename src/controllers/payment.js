@@ -130,6 +130,106 @@ module.exports = {
     }
   },
 
+  storePoMp: async (req, res) => {
+    const { payment_code, channel_id, email, invoice_value } = req.body;
+
+    var totalAmount = 0;
+
+    var items = await Order.orderItemByInvoiceValue(invoice_value);
+
+    var payments = await Payment.getListByPaymentCode(payment_code);
+
+    try {
+      if (typeof payment_code == "undefined" || payment_code == "") {
+        throw new Error("Field payment_code is required");
+      }
+
+      if (typeof channel_id == "undefined" || channel_id == "") {
+        throw new Error("Field channel_id is required");
+      }
+
+      if (typeof invoice_value == "undefined" || invoice_value == "") {
+        throw new Error("Field invoice_value is required");
+      }
+
+      if (items.length == 0) {
+        throw new Error("Invoice not found");
+      }
+
+      var checkPaymentIsExist = await Payment.checkPaymentIsExist(
+        invoice_value
+      );
+
+      if (checkPaymentIsExist.length != 0) {
+        throw new Error("Invoice already registered");
+      }
+
+      for (const item of items) {
+        totalAmount += item.price * item.qty;
+      }
+
+      const callbackUrl = process.env.CALLBACK_MP;
+
+      const payload = {
+        channel_id: channel_id,
+        orderId: invoice_value,
+        amount: totalAmount,
+        app: "MRHPUTIH",
+        callbackUrl: callbackUrl,
+      };
+
+      const config = {
+        method: "POST",
+        url: process.env.PAY_MIDTRANS,
+        data: payload,
+      };
+
+      const result = await axios(config);
+
+      var paymentAccess, paymentType, paymentCode, paymentExpire;
+
+      if (["gopay", "shopee", "ovo", "dana"].includes(payment_code)) {
+        paymentAccess = result.data.data.data.actions[0].url;
+        paymentType = "emoney";
+        paymentExpire = moment()
+          .tz("Asia/Jakarta")
+          .add(30, "minutes")
+          .format("YYYY-MM-DD HH:mm:ss");
+      } else {
+        paymentAccess = result.data.data.data.vaNumber;
+        paymentType = "va";
+        paymentExpire = result.data.data.expire;
+      }
+
+      paymentCode = payment_code;
+
+      await sendEmail(
+        "MerahPutih",
+        email,
+        utils.templateStoreMp(
+          invoice_value,
+          result.data.data.totalAmount,
+          paymentCode,
+          paymentExpire,
+          paymentType,
+          paymentAccess
+        )
+      );
+
+      misc.response(res, 200, false, "", {
+        order_id: invoice_value,
+        amount: result.data.data.totalAmount,
+        payment_access: paymentAccess,
+        payment_type: paymentType,
+        payment_expire: paymentExpire,
+        bank: payments.length == 0 ? {} : payments[0],
+      });
+    } catch (e) {
+      console.error(e);
+      misc.response(res, 400, true, e.message);
+    }
+  },
+
   storeHtci: async (req, res) => {
     const {
       channel_id,
