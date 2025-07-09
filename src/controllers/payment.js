@@ -218,7 +218,7 @@ module.exports = {
         "payment-merah-putih"
       );
 
-      await Payment.updatePoIntoUnpaid(invoice_value);
+      // await Payment.updatePoIntoUnpaid(invoice_value);
 
       misc.response(res, 200, false, "", {
         order_id: invoice_value,

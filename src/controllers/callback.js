@@ -30,7 +30,7 @@ module.exports = {
           "MerahPutih",
           `Pembayaran ${order_id} telah berhasil !`,
           orders.length == 0 ? "-" : orders[0].email,
-          "<h1>Barang Akan Segera Dikirim </h1>",
+          "<h1>Barang Akan Segera Dikirim</h1>",
           "payment-paid-merah-putih"
         );
       }
