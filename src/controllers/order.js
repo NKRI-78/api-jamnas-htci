@@ -50,7 +50,7 @@ module.exports = {
       // ✅ Prepare order data
       const orderData = {
         club: club.trim(),
-        date: date ? moment(date).format("YYYY-MM-DD HH:mm:ss") : null,
+        date: moment(date).format("YYYY-MM-DD HH:mm:ss"),
         status: status.trim(),
         address: address.trim(),
         invoice_value: invoiceValue,
@@ -84,7 +84,7 @@ module.exports = {
           <li><strong>Club:</strong> ${club}</li>
           <li><strong>Status:</strong> ${status == "3" ? "PO" : "UNPAID"}</li>
           <li><strong>Event Date:</strong> ${moment(date).format(
-            "YYYY-MM-DD HH:mm"
+            "YYYY-MM-DD HH:mm:ss"
           )}</li>
           <li><strong>Address:</strong> ${address}</li>
           <li><strong>Phone:</strong> ${phone}</li>
