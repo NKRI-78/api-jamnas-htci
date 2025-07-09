@@ -105,6 +105,7 @@ module.exports = {
 
       await sendEmail(
         "MerahPutih",
+        "Pembayaran",
         email,
         utils.templateStoreMp(
           invoiceValue,
@@ -113,7 +114,8 @@ module.exports = {
           paymentExpire,
           paymentType,
           paymentAccess
-        )
+        ),
+        "payment-merah-putih"
       );
 
       misc.response(res, 200, false, "", {
