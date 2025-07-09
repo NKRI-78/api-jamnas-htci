@@ -52,6 +52,7 @@ module.exports = {
           oi.order_id = ?
         GROUP BY 
           p.id, p.title, p.img, sp.id, sp.size
+        ORDER BY p.id DESC
       `;
 
       // SELECT
