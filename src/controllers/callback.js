@@ -28,9 +28,9 @@ module.exports = {
 
         await sendEmail(
           "MerahPutih",
-          `Pembayaran ${order_id} telah berhasil !`,
+          `ORDER ID #${order_id} Successfully Paid !`,
           orders.length == 0 ? "-" : orders[0].email,
-          "<h1>Barang Akan Segera Dikirim</h1>",
+          `<h1>Please check our website for any detail. https://merah-putih-htci-dki-jakarta.langitdigital78.com</h1>`,
           "payment-paid-merah-putih"
         );
       }

@@ -2,6 +2,8 @@ const misc = require("../helpers/response");
 
 const moment = require("moment-timezone");
 
+const { sendEmail } = require("../helpers/utils");
+
 const User = require("../models/User");
 const Order = require("../models/Order");
 
@@ -10,7 +12,6 @@ module.exports = {
     const { email, name, club, status, date, address, phone, items } = req.body;
 
     try {
-      // ✅ Validate required fields
       const requiredFields = {
         email,
         name,
@@ -74,6 +75,42 @@ module.exports = {
           orderItems.push(orderItemData);
         }
       }
+
+      const itemsList = orderItems
+        .map(
+          (item, index) =>
+            `${index + 1}. Product ID: ${item.product_id}, Size ID: ${
+              item.size_id
+            }, Qty: ${item.qty}`
+        )
+        .join("<br>");
+
+      const template = `
+        <h2>Hi ${name},</h2>
+        <p>Thank you for your order! Here is a summary:</p>
+        <ul>
+          <li><strong>Invoice:</strong> ${invoiceValue}</li>
+          <li><strong>Club:</strong> ${club}</li>
+          <li><strong>Status:</strong> ${status}</li>
+          <li><strong>Event Date:</strong> ${moment(date).format(
+            "YYYY-MM-DD HH:mm"
+          )}</li>
+          <li><strong>Address:</strong> ${address}</li>
+          <li><strong>Phone:</strong> ${phone}</li>
+        </ul>
+        <h4>Order Items:</h4>
+        <p>${itemsList}</p>
+        <p>We will process your order soon. If you have any questions, just reply to this email.</p>
+        <p>Regards,<br>App Team</p>
+      `;
+
+      await sendEmail(
+        "MerahPutih",
+        "Your Order Confirmation",
+        email,
+        template,
+        "merah-putih-order-confirmation"
+      );
 
       return misc.response(res, 200, false, "Order created successfully", {
         user: { id: userId, ...userData },
