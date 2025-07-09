@@ -108,6 +108,22 @@ module.exports = {
     });
   },
 
+  updatePoIntoUnpaid: (invoiceValue) => {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE orders SET status = 1 WHERE invoice_value = ?`;
+
+      const values = [invoiceValue];
+
+      connMP.query(query, values, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
   updateInvoiceValue: (invoiceValue, orderId) => {
     return new Promise((resolve, reject) => {
       const query = `UPDATE orders SET invoice_value = ? WHERE id = ?`;

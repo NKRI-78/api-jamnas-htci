@@ -216,6 +216,8 @@ module.exports = {
         )
       );
 
+      await Payment.updatePoIntoUnpaid(invoice_value);
+
       misc.response(res, 200, false, "", {
         order_id: invoice_value,
         amount: result.data.data.totalAmount,
