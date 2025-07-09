@@ -205,6 +205,8 @@ module.exports = {
 
       paymentCode = payment_code;
 
+      console.log(email)
+
       await sendEmail(
         "MerahPutih",
         "Pembayaran",
