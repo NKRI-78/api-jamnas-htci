@@ -70,16 +70,16 @@ module.exports = {
     return template;
   },
 
-  sendEmail: async (app, email, body) => {
+  sendEmail: async (app, subject, email, body, type) => {
     try {
       const response = await axios.post(
         "https://api-email.inovatiftujuh8.com/api/v1/email",
         {
           to: email,
           app: app,
-          subject: "Pembayaran",
+          subject: subject,
           body: body,
-          type: "payment-merah-putih",
+          type: type,
         }
       );
       if (response.status == 200) {

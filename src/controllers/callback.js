@@ -1,4 +1,5 @@
 const misc = require("../helpers/response");
+const { sendEmail } = require("../helpers/utils");
 const Payment = require("../models/Payment");
 
 module.exports = {
@@ -22,6 +23,16 @@ module.exports = {
     try {
       if (status == "PAID") {
         await Payment.updatePaymentPaid(order_id);
+
+        var orders = await Payment.getEmailByInvoiceValue(order_id);
+
+        await sendEmail(
+          "MerahPutih",
+          `Pembayaran ${order_id} telah berhasil !`,
+          orders.length == 0 ? "-" : orders[0].email,
+          "<h1>Barang Akan Segera Dikirim </h1>",
+          "payment-paid-merah-putih"
+        );
       }
       misc.response(res, 200, false, "Callback MP called");
     } catch (e) {

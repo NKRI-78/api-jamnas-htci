@@ -16,6 +16,22 @@ module.exports = {
     });
   },
 
+  getEmailByInvoiceValue: (invoiceValue) => {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT u.email FROM orders o 
+      INNER JOIN users u ON u.id = o.user_id
+      WHERE invoice_value = ?`;
+      const values = [invoiceValue];
+      connPayment.query(query, values, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
   getListByPaymentCode: (id) => {
     return new Promise((resolve, reject) => {
       const query = `SELECT id, name, nameCode, logo, platform, fee FROM Channels WHERE nameCode = ?`;

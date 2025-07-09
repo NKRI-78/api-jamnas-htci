@@ -205,6 +205,7 @@ module.exports = {
 
       await sendEmail(
         "MerahPutih",
+        "Pembayaran",
         email,
         utils.templateStoreMp(
           invoice_value,
@@ -213,7 +214,8 @@ module.exports = {
           paymentExpire,
           paymentType,
           paymentAccess
-        )
+        ),
+        "payment-merah-putih"
       );
 
       await Payment.updatePoIntoUnpaid(invoice_value);
