@@ -4,7 +4,7 @@ const connMP = require("../configs/db_web_merah_putih");
 module.exports = {
   getProductMerahPutihList: () => {
     return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM products`;
+      const query = `SELECT * FROM products ORDER BY id DESC`;
 
       connMP.query(query, (e, result) => {
         if (e) {
