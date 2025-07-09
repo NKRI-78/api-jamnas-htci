@@ -105,6 +105,7 @@ module.exports = {
       INNER JOIN order_statuses os ON os.id = o.status
       INNER JOIN products p ON p.id = oi.product_id
       INNER JOIN size_prices sp ON sp.id = oi.size_id
+      ORDER BY o.id DESC
     `;
 
       connMP.query(query, (err, results) => {
