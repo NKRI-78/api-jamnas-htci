@@ -76,32 +76,20 @@ module.exports = {
         }
       }
 
-      const itemsList = orderItems
-        .map(
-          (item, index) =>
-            `${index + 1}. Product ID: ${item.product_id}, Size ID: ${
-              item.size_id
-            }, Qty: ${item.qty}`
-        )
-        .join("<br>");
-
       const template = `
         <h2>Hi ${name},</h2>
         <p>Thank you for your order! Here is a summary:</p>
         <ul>
           <li><strong>Invoice:</strong> ${invoiceValue}</li>
           <li><strong>Club:</strong> ${club}</li>
-          <li><strong>Status:</strong> ${status}</li>
+          <li><strong>Status:</strong> ${status == "3" ? "PO" : "UNPAID"}</li>
           <li><strong>Event Date:</strong> ${moment(date).format(
             "YYYY-MM-DD HH:mm"
           )}</li>
           <li><strong>Address:</strong> ${address}</li>
           <li><strong>Phone:</strong> ${phone}</li>
         </ul>
-        <h4>Order Items:</h4>
-        <p>${itemsList}</p>
-        <p>We will process your order soon. If you have any questions, just reply to this email.</p>
-        <p>Regards,<br>App Team</p>
+        <p>Regards,<br>MerahPutih</p>
       `;
 
       await sendEmail(
