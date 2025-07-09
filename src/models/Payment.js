@@ -22,7 +22,7 @@ module.exports = {
       INNER JOIN users u ON u.id = o.user_id
       WHERE invoice_value = ?`;
       const values = [invoiceValue];
-      connPayment.query(query, values, (e, result) => {
+      connMP.query(query, values, (e, result) => {
         if (e) {
           reject(new Error(e));
         } else {
