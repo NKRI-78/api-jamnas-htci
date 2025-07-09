@@ -16,6 +16,7 @@ module.exports = {
       INNER JOIN order_statuses os ON os.id = o.status
       INNER JOIN size_prices sp ON sp.id = oi.size_id
       INNER JOIN users u ON u.id = o.user_id
+      WHERE o.status = '2'
       GROUP BY u.id, u.name, u.email, u.phone
     `;
 
