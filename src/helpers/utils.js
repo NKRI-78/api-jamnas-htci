@@ -37,9 +37,15 @@ module.exports = {
             </tr>
             <tr>
               <td style="padding: 8px; border: 1px solid #ddd;">Amount</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${this.formatCurrency(
-                totalAmount
-              )}</td>
+              <td style="padding: 8px; border: 1px solid #ddd;">${new Intl.NumberFormat(
+                "id-ID",
+                {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 0,
+                }
+              ).format(totalAmount)}</td>
             </tr>
             <tr>
               <td style="padding: 8px; border: 1px solid #ddd;">Payment Method</td>
