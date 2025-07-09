@@ -5,7 +5,7 @@ const connMP = require("../configs/db_web_merah_putih");
 module.exports = {
   getList: () => {
     return new Promise((resolve, reject) => {
-      const query = `SELECT id, name, nameCode, logo, platform, fee FROM Channels`;
+      const query = `SELECT id, name, nameCode, logo, platform, fee FROM Channels WHERE nameCode != 'bca'`;
       connPayment.query(query, (e, result) => {
         if (e) {
           reject(new Error(e));

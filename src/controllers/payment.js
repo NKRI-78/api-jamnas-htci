@@ -7,6 +7,7 @@ const axios = require("axios");
 const Payment = require("../models/Payment");
 const Order = require("../models/Order");
 const { sendEmail, formatCurrency } = require("../helpers/utils");
+const utils = require("../helpers/utils");
 
 module.exports = {
   getList: async (_, res) => {
@@ -85,7 +86,7 @@ module.exports = {
 
       const result = await axios(config);
 
-      let paymentAccess, paymentType, paymentExpire;
+      var paymentAccess, paymentType, paymentCode, paymentExpire;
 
       if (["gopay", "shopee", "ovo", "dana"].includes(payment_code)) {
         paymentAccess = result.data.data.data.actions[0].url;
@@ -100,44 +101,20 @@ module.exports = {
         paymentExpire = result.data.data.expire;
       }
 
-      var template = `
-        <div style="font-family: Arial, sans-serif; color: #333;">
-          <h2>Invoice Payment</h2>
-          <p>Hi,</p>
-          <p>Thank you for your order. Here are your payment details:</p>
-          <table style="border-collapse: collapse; width: 100%;">
-            <tr>
-              <td style="padding: 8px; border: 1px solid #ddd;">Order ID</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${invoiceValue}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border: 1px solid #ddd;">Amount</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${formatCurrency(
-                result.data.data.totalAmount
-              )}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border: 1px solid #ddd;">Payment Method</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${payment_code.toUpperCase()}</td>
-            </tr>
-            <tr>
-              <td style="padding: 8px; border: 1px solid #ddd;">Payment Expiration</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${paymentExpire}</td>
-            </tr>
-          </table>
-          <p style="margin-top: 20px;">
-            ${
-              paymentType === "emoney"
-                ? `<a href="${paymentAccess}" style="padding: 10px 20px; background-color: #E91E63; color: #fff; text-decoration: none;">Pay Now</a>`
-                : `Please pay to Virtual Account Number: <strong>${paymentAccess}</strong>`
-            }
-          </p>
-          <p>If you have any questions, please contact our support.</p>
-          <p>Best regards,<br/>MerahPutih Team</p>
-        </div>
-      `;
+      paymentCode = payment_code;
 
-      await sendEmail("MerahPutih", email, template);
+      await sendEmail(
+        "MerahPutih",
+        email,
+        utils.templateStoreMp(
+          invoiceValue,
+          result.data.data.totalAmount,
+          paymentCode,
+          paymentExpire,
+          paymentType,
+          paymentAccess
+        )
+      );
 
       misc.response(res, 200, false, "", {
         order_id: invoiceValue,
