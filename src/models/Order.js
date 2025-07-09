@@ -168,7 +168,7 @@ module.exports = {
           ORDER BY id DESC 
           LIMIT 1
         )
-        AND o.email = ?;
+        AND u.email = ?;
       `;
 
       const values = [userEmail];
