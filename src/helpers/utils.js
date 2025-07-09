@@ -37,7 +37,7 @@ module.exports = {
             </tr>
             <tr>
               <td style="padding: 8px; border: 1px solid #ddd;">Amount</td>
-              <td style="padding: 8px; border: 1px solid #ddd;">${formatCurrency(
+              <td style="padding: 8px; border: 1px solid #ddd;">${this.formatCurrency(
                 totalAmount
               )}</td>
             </tr>
