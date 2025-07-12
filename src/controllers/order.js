@@ -54,6 +54,7 @@ module.exports = {
         status: status.trim(),
         address: address.trim(),
         invoice_value: invoiceValue,
+        user_name: name,
         user_id: userId,
       };
 

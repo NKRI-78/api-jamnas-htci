@@ -6,7 +6,7 @@ const axios = require("axios");
 
 const Payment = require("../models/Payment");
 const Order = require("../models/Order");
-const { sendEmail, formatCurrency } = require("../helpers/utils");
+const { sendEmail } = require("../helpers/utils");
 const utils = require("../helpers/utils");
 
 module.exports = {
@@ -205,7 +205,7 @@ module.exports = {
 
       paymentCode = payment_code;
 
-      console.log(email)
+      console.log(email);
 
       await sendEmail(
         "MerahPutih",

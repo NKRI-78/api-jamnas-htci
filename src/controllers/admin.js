@@ -83,6 +83,7 @@ module.exports = {
             address: order.address,
             date: order.date,
             club: order.club,
+            order_username: order.order_username,
             user: userMap[order.user_id] || {
               name: null,
               phone: null,
