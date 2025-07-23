@@ -141,6 +141,7 @@ module.exports = {
       });
     });
   },
+  
   orderItemByUser: (userEmail) => {
     return new Promise((resolve, reject) => {
       const query = `SELECT 

@@ -1,10 +1,7 @@
 const misc = require("../helpers/response");
 
-const Club = require("../models/Club");
 const Order = require("../models/Order");
 const Payment = require("../models/Payment");
-const Product = require("../models/Product");
-const payment = require("./payment");
 
 module.exports = {
   getList: async (req, res) => {
