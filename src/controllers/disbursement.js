@@ -4,7 +4,6 @@ const Inbox = require("../models/Inbox");
 const axios = require("axios");
 
 const misc = require("../helpers/response");
-const inbox = require("./inbox");
 
 module.exports = {
   list: async (_, res) => {
