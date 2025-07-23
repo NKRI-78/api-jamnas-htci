@@ -92,6 +92,7 @@ module.exports = {
         o.address,
         o.club,
         o.date,
+        o.order_username,
         os.name AS status_name,
         oi.qty AS item_qty,
         p.id AS product_id,
@@ -120,8 +121,8 @@ module.exports = {
 
   orderMp: (data) => {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO orders (address, date, club, status, invoice_value, user_id) 
-                VALUES (?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO orders (address, date, club, status, invoice_value, order_username, user_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
       const values = [
         data.address,
@@ -129,6 +130,7 @@ module.exports = {
         data.club,
         data.status,
         data.invoice_value,
+        data.user_name,
         data.user_id,
       ];
 

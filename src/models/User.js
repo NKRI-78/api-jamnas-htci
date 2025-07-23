@@ -33,7 +33,6 @@ module.exports = {
       const query = `INSERT INTO users (name, email, phone, updated_at)
       VALUES (?, ?, ?, NOW())
       ON DUPLICATE KEY UPDATE 
-        name = VALUES(name),
         phone = VALUES(phone),
         updated_at = NOW()
       `;
