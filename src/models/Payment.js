@@ -18,7 +18,8 @@ module.exports = {
 
   getEmailByInvoiceValue: (invoiceValue) => {
     return new Promise((resolve, reject) => {
-      const query = `SELECT u.email FROM orders o 
+      const query = `SELECT u.email o.type 
+      FROM orders o 
       INNER JOIN users u ON u.id = o.user_id
       WHERE invoice_value = ?`;
       const values = [invoiceValue];

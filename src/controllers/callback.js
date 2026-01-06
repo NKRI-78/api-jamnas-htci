@@ -26,11 +26,20 @@ module.exports = {
 
         var orders = await Payment.getEmailByInvoiceValue(order_id);
 
+        var app = "MerahPutih";
+        var body =
+          "<h1>Please check our website for any detail. https://merah-putih-htci-dki-jakarta.langitdigital78.com</h1>";
+
+        if (orders[0].type == "ATJ") {
+          app = "ATJ";
+          body = "<h1>Please check our website for any detail./h1>";
+        }
+
         await sendEmail(
-          "MerahPutih",
+          app,
           `ORDER ID #${order_id} Successfully Paid !`,
           orders.length == 0 ? "-" : orders[0].email,
-          `<h1>Please check our website for any detail. https://merah-putih-htci-dki-jakarta.langitdigital78.com</h1>`,
+          body,
           "payment-paid-merah-putih"
         );
       }
