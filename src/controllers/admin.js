@@ -44,7 +44,7 @@ module.exports = {
       misc.response(res, 400, true, e.message || "Something went wrong");
     }
   },
-  OrderListMp: async (_, res) => {
+  OrderListMp: async (req, res) => {
     const { type } = req.query;
 
     try {

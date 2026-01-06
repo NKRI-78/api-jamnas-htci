@@ -106,11 +106,11 @@ module.exports = {
       INNER JOIN order_statuses os ON os.id = o.status
       INNER JOIN products p ON p.id = oi.product_id
       INNER JOIN size_prices sp ON sp.id = oi.size_id
-      WHERE o.type LIKE ?
+      WHERE o.type = ?
       ORDER BY o.id DESC
     `;
 
-      const params = [`%${type}%`];
+      const params = [type];
 
       connMP.query(query, params, (err, results) => {
         if (err) return reject(err); // <-- fix: pakai err
