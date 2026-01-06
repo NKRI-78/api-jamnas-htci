@@ -45,9 +45,11 @@ module.exports = {
     }
   },
   OrderListMp: async (_, res) => {
+    const { type } = req.query;
+
     try {
       // 1) Get all orders
-      const orders = await Order.orderListMp();
+      const orders = await Order.orderListMp(type);
 
       if (orders.length === 0) {
         return misc.response(res, 200, false, "No orders found", []);

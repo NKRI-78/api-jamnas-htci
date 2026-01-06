@@ -9,7 +9,14 @@ const Order = require("../models/Order");
 
 module.exports = {
   OrderMp: async (req, res) => {
-    const { email, name, club, status, date, address, phone, items } = req.body;
+    const { email, name, club, status, date, address, phone, type, items } =
+      req.body;
+
+    var app = "MRHPUTIH";
+
+    if (typeof type != "undefined") {
+      app = "ATJ";
+    }
 
     try {
       const requiredFields = {
@@ -45,7 +52,7 @@ module.exports = {
       // ✅ Generate invoice number
       const randomNum = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
       const lastDigits = phone.slice(-5);
-      const invoiceValue = `MRHPUTIH-${lastDigits}${randomNum}`;
+      const invoiceValue = `${app}-${lastDigits}${randomNum}`;
 
       // ✅ Prepare order data
       const orderData = {
@@ -55,6 +62,7 @@ module.exports = {
         address: address.trim(),
         invoice_value: invoiceValue,
         user_name: name,
+        type: type,
         user_id: userId,
       };
 
@@ -90,11 +98,11 @@ module.exports = {
           <li><strong>Address:</strong> ${address}</li>
           <li><strong>Phone:</strong> ${phone}</li>
         </ul>
-        <p>Regards,<br>MerahPutih</p>
+        <p>Regards,<br>${app}</p>
       `;
 
       await sendEmail(
-        "MerahPutih",
+        app,
         "Your Order Confirmation",
         email,
         template,

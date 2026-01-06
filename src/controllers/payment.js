@@ -22,17 +22,21 @@ module.exports = {
   },
 
   storeMp: async (req, res) => {
-    const { payment_code, channel_id, email } = req.body;
+    const { payment_code, channel_id, email, type } = req.body;
 
     var totalAmount = 0;
 
+    var app = "MRHPUTIH";
     var id = "";
     var phone = "";
     var invoiceValue = "";
 
     var items = await Order.orderItemByUser(email);
-
     var payments = await Payment.getListByPaymentCode(payment_code);
+
+    if (typeof type != "undefined") {
+      app = "ATJ";
+    }
 
     try {
       if (typeof payment_code == "undefined" || payment_code == "") {
@@ -65,6 +69,10 @@ module.exports = {
           Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
         invoiceValue = `MRHPUTIH-${lastDigits}${randomNum}`;
 
+        if (typeof type != "undefined") {
+          invoiceValue = `ATJ-${lastDigits}${randomNum}`;
+        }
+
         await Payment.updateInvoiceValue(invoiceValue, id);
       }
 
@@ -74,7 +82,7 @@ module.exports = {
         channel_id: channel_id,
         orderId: invoiceValue,
         amount: totalAmount,
-        app: "MRHPUTIH",
+        app: app,
         callbackUrl: callbackUrl,
       };
 
@@ -104,7 +112,7 @@ module.exports = {
       paymentCode = payment_code;
 
       await sendEmail(
-        "MerahPutih",
+        app,
         "Pembayaran",
         email,
         utils.templateStoreMp(
@@ -133,13 +141,16 @@ module.exports = {
   },
 
   storePoMp: async (req, res) => {
-    const { payment_code, channel_id, email, invoice_value } = req.body;
+    const { payment_code, channel_id, email, invoice_value, type } = req.body;
 
     var totalAmount = 0;
 
     var items = await Order.orderItemByInvoiceValue(invoice_value);
-
     var payments = await Payment.getListByPaymentCode(payment_code);
+
+    if (typeof type != "undefined") {
+      app = "ATJ";
+    }
 
     try {
       if (typeof payment_code == "undefined" || payment_code == "") {
@@ -176,7 +187,7 @@ module.exports = {
         channel_id: channel_id,
         orderId: invoice_value,
         amount: totalAmount,
-        app: "MRHPUTIH",
+        app: app,
         callbackUrl: callbackUrl,
       };
 
@@ -205,10 +216,8 @@ module.exports = {
 
       paymentCode = payment_code;
 
-      console.log(email);
-
       await sendEmail(
-        "MerahPutih",
+        app,
         "Pembayaran",
         email,
         utils.templateStoreMp(

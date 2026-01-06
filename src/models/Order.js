@@ -81,7 +81,7 @@ module.exports = {
       });
     });
   },
-  orderListMp: () => {
+  orderListMp: (type) => {
     return new Promise((resolve, reject) => {
       const query = `
       SELECT 
@@ -106,23 +106,23 @@ module.exports = {
       INNER JOIN order_statuses os ON os.id = o.status
       INNER JOIN products p ON p.id = oi.product_id
       INNER JOIN size_prices sp ON sp.id = oi.size_id
+      WHERE o.type LIKE ?
       ORDER BY o.id DESC
     `;
 
-      connMP.query(query, (err, results) => {
-        if (err) {
-          reject(new Error(e));
-        } else {
-          resolve(results);
-        }
+      const params = [`%${type}%`];
+
+      connMP.query(query, params, (err, results) => {
+        if (err) return reject(err); // <-- fix: pakai err
+        resolve(results);
       });
     });
   },
 
   orderMp: (data) => {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO orders (address, date, club, status, invoice_value, order_username, user_id) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+      const query = `INSERT INTO orders (address, date, club, status, invoice_value, order_username, user_id, type) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
       const values = [
         data.address,
@@ -132,6 +132,7 @@ module.exports = {
         data.invoice_value,
         data.user_name,
         data.user_id,
+        data.type,
       ];
 
       connMP.query(query, values, (e, result) => {
@@ -143,7 +144,7 @@ module.exports = {
       });
     });
   },
-  
+
   orderItemByUser: (userEmail) => {
     return new Promise((resolve, reject) => {
       const query = `SELECT 
