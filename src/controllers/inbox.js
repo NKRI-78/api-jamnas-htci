@@ -20,7 +20,7 @@ module.exports = {
         var id = order.id;
         var invoiceValue = order.invoice_value;
         var status = order.status;
-        var createdAt = moment(order.created_at).format("HH:mm");
+        var createdAt = moment(order.created_at);
 
         var rows = await Order.orderItemByOrderId(id);
 
