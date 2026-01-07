@@ -1,7 +1,10 @@
 const misc = require("../helpers/response");
+const { splitDateTime } = require("../helpers/utils");
 
 const Order = require("../models/Order");
 const Payment = require("../models/Payment");
+
+const moment = require("moment-timezone");
 
 module.exports = {
   getList: async (req, res) => {
@@ -19,6 +22,8 @@ module.exports = {
         var invoiceValue = order.invoice_value;
         var status = order.status;
         var createdAt = order.created_at;
+
+        const { date, time } = splitDateTime(createdAt);
 
         var rows = await Order.orderItemByOrderId(id);
 
@@ -79,7 +84,8 @@ module.exports = {
           payment_type: dataParse.paymentType === "echannel" ? "va" : "emoney",
           payment_expire: expire,
           status: status,
-          created_at: createdAt,
+          created_date: date,
+          created_time: time,
           bank: banks.length === 0 ? {} : banks[0],
           products,
         });

@@ -17,6 +17,15 @@ module.exports = {
     }
   },
 
+  splitDateTime: (dt) => {
+    if (!dt || typeof dt !== "string") return { date: null, time: null };
+    const [datePart, timePart] = dt.split(" ");
+    return {
+      date: datePart ?? null,
+      time: timePart?.slice(0, 5) ?? null,
+    };
+  },
+
   templateStoreMp: (
     invoiceValue,
     totalAmount,

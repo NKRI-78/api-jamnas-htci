@@ -19,6 +19,7 @@ module.exports = {
       port: process.env.DB_PORT,
       database: "web-merah-putih",
       timezone: "+07:00",
+      dateStrings: true,
     },
   },
   database_payment: {
