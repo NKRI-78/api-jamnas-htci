@@ -5,10 +5,10 @@ const Payment = require("../models/Payment");
 
 module.exports = {
   getList: async (req, res) => {
-    const { email } = req.body;
+    const { email, type } = req.body;
 
     try {
-      var orders = await Order.orderListMpByEmail(email);
+      var orders = await Order.orderListMpByEmail(email, type);
 
       var dataOrder = [];
 

@@ -21,10 +21,12 @@ module.exports = {
     }
   },
 
-  BalanceMp: async (_, res) => {
+  BalanceMp: async (req, res) => {
+    const { type } = req.query 
+
     try {
       // 1) Get all user balances
-      const balances = await Admin.getBalance();
+      const balances = await Admin.getBalance(type);
 
       // 2) Calculate total balance
       const totalBalance = balances.reduce((acc, user) => {

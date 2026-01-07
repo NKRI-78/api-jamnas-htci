@@ -2,7 +2,7 @@ const connMP = require("../configs/db_web_merah_putih");
 const order = require("../controllers/order");
 
 module.exports = {
-  getBalance: () => {
+  getBalance: (type) => {
     return new Promise((resolve, reject) => {
       const query = `
       SELECT 
@@ -17,10 +17,13 @@ module.exports = {
       INNER JOIN size_prices sp ON sp.id = oi.size_id
       INNER JOIN users u ON u.id = o.user_id
       WHERE o.status = '2'
+      AND o.type = ?
       GROUP BY u.id, u.name, u.email, u.phone
     `;
 
-      connMP.query(query, (e, results) => {
+      const params = [type];
+
+      connMP.query(query, params, (e, results) => {
         if (e) {
           reject(new Error(e));
         }
