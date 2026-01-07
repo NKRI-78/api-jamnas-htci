@@ -1,5 +1,7 @@
 const misc = require("../helpers/response");
 
+const moment = require("moment-timezone");
+
 const Order = require("../models/Order");
 const Payment = require("../models/Payment");
 
@@ -18,7 +20,7 @@ module.exports = {
         var id = order.id;
         var invoiceValue = order.invoice_value;
         var status = order.status;
-        var createdAt = order.created_at;
+        var createdAt = moment(order.created_at).format("HH:mm");
 
         var rows = await Order.orderItemByOrderId(id);
 
