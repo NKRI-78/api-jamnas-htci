@@ -8,6 +8,7 @@ module.exports = {
       password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT,
       database: process.env.DB_NAME,
+      timezone: "+07:00",
     },
   },
   database_merah_putih: {
@@ -17,6 +18,7 @@ module.exports = {
       password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT,
       database: "web-merah-putih",
+      timezone: "+07:00",
     },
   },
   database_payment: {
@@ -26,6 +28,7 @@ module.exports = {
       password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT,
       database: "payment_gateway_langitdigital_dev",
+      timezone: "+07:00",
     },
   },
   port: process.env.PORT,
