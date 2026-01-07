@@ -40,6 +40,7 @@ module.exports = {
         }
       }
 
+      // ✅ Register or get user
       const userData = {
         name: name.trim(),
         email: email.trim(),
@@ -48,10 +49,12 @@ module.exports = {
 
       const userId = await User.register(userData);
 
+      // ✅ Generate invoice number
       const randomNum = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
       const lastDigits = phone.slice(-5);
       const invoiceValue = `${app}-${lastDigits}${randomNum}`;
 
+      // ✅ Prepare order data
       const orderData = {
         club: club.trim(),
         date: moment(date).format("YYYY-MM-DD HH:mm:ss"),
@@ -65,6 +68,7 @@ module.exports = {
 
       const orderId = await Order.orderMp(orderData);
 
+      // ✅ Insert order items
       const orderItems = [];
 
       for (const item of items) {
