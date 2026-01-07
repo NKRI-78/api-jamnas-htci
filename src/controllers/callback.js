@@ -26,19 +26,19 @@ module.exports = {
 
         var orders = await Payment.getEmailByInvoiceValue(order_id);
 
-        var app = "MerahPutih";
+        var app = "MRHPUTIH";
         var body =
           "<h1>Please check our website for any detail. https://merah-putih-htci-dki-jakarta.langitdigital78.com</h1>";
 
         if (orders[0].type == "ATJ") {
           app = "ATJ";
-          body = "<h1>Please check our website for any detail./h1>";
+          body = "Thankyou for purchasing our merchandise";
         }
 
         await sendEmail(
           app,
           `ORDER ID #${order_id} Successfully Paid !`,
-          orders.length == 0 ? "-" : orders[0].email,
+          orders[0].email,
           body,
           "payment-paid-merah-putih"
         );
