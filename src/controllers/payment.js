@@ -1,20 +1,20 @@
-const misc = require("../helpers/response");
+const misc = require('../helpers/response');
 
-const moment = require("moment-timezone");
+const moment = require('moment-timezone');
 
-const axios = require("axios");
+const axios = require('axios');
 
-const Payment = require("../models/Payment");
-const Order = require("../models/Order");
-const { sendEmail } = require("../helpers/utils");
-const utils = require("../helpers/utils");
+const Payment = require('../models/Payment');
+const Order = require('../models/Order');
+const { sendEmail } = require('../helpers/utils');
+const utils = require('../helpers/utils');
 
 module.exports = {
   getList: async (_, res) => {
     try {
       const payments = await Payment.getList();
 
-      misc.response(res, 200, false, "", payments);
+      misc.response(res, 200, false, '', payments);
     } catch (e) {
       console.error(e);
       misc.response(res, 400, true, e.message);
@@ -26,29 +26,29 @@ module.exports = {
 
     var totalAmount = 0;
 
-    var app = "MRHPUTIH";
-    var id = "";
-    var phone = "";
-    var invoiceValue = "";
+    var app = 'MRHPUTIH';
+    var id = '';
+    var phone = '';
+    var invoiceValue = '';
 
     var items = await Order.orderItemByUser(email);
     var payments = await Payment.getListByPaymentCode(payment_code);
 
-    if (typeof type != "undefined") {
-      app = "ATJ";
+    if (typeof type != 'undefined' || type != '') {
+      app = type;
     }
 
     try {
-      if (typeof payment_code == "undefined" || payment_code == "") {
-        throw new Error("Field payment_code is required");
+      if (typeof payment_code == 'undefined' || payment_code == '') {
+        throw new Error('Field payment_code is required');
       }
 
-      if (typeof channel_id == "undefined" || channel_id == "") {
-        throw new Error("Field channel_id is required");
+      if (typeof channel_id == 'undefined' || channel_id == '') {
+        throw new Error('Field channel_id is required');
       }
 
-      if (typeof email == "undefined" || email == "") {
-        throw new Error("Field email is required");
+      if (typeof email == 'undefined' || email == '') {
+        throw new Error('Field email is required');
       }
 
       for (const item of items) {
@@ -59,19 +59,15 @@ module.exports = {
         phone = item.phone;
       }
 
-      if (invoiceValue == "") throw new Error("invoice_value is required");
+      if (invoiceValue == '') throw new Error('invoice_value is required');
 
       var checkPaymentIsExist = await Payment.checkPaymentIsExist(invoiceValue);
 
       if (checkPaymentIsExist.length != 0) {
         const lastDigits = phone.slice(-5);
-        const randomNum =
-          Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
-        invoiceValue = `MRHPUTIH-${lastDigits}${randomNum}`;
+        const randomNum = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000;
 
-        if (typeof type != "undefined") {
-          invoiceValue = `ATJ-${lastDigits}${randomNum}`;
-        }
+        invoiceValue = `${app}-${lastDigits}${randomNum}`;
 
         await Payment.updateInvoiceValue(invoiceValue, id);
       }
@@ -87,7 +83,7 @@ module.exports = {
       };
 
       const config = {
-        method: "POST",
+        method: 'POST',
         url: process.env.PAY_MIDTRANS,
         data: payload,
       };
@@ -96,16 +92,16 @@ module.exports = {
 
       var paymentAccess, paymentType, paymentCode, paymentExpire;
 
-      if (["gopay", "shopee", "ovo", "dana"].includes(payment_code)) {
+      if (['gopay', 'shopee', 'ovo', 'dana'].includes(payment_code)) {
         paymentAccess = result.data.data.data.actions[0].url;
-        paymentType = "emoney";
+        paymentType = 'emoney';
         paymentExpire = moment()
-          .tz("Asia/Jakarta")
-          .add(30, "minutes")
-          .format("YYYY-MM-DD HH:mm:ss");
+          .tz('Asia/Jakarta')
+          .add(30, 'minutes')
+          .format('YYYY-MM-DD HH:mm:ss');
       } else {
         paymentAccess = result.data.data.data.vaNumber;
-        paymentType = "va";
+        paymentType = 'va';
         paymentExpire = result.data.data.expire;
       }
 
@@ -113,7 +109,7 @@ module.exports = {
 
       await sendEmail(
         app,
-        "Pembayaran",
+        'Pembayaran',
         email,
         utils.templateStoreMp(
           invoiceValue,
@@ -121,12 +117,12 @@ module.exports = {
           paymentCode,
           paymentExpire,
           paymentType,
-          paymentAccess
+          paymentAccess,
         ),
-        "payment-merah-putih"
+        'payment-merah-putih',
       );
 
-      misc.response(res, 200, false, "", {
+      misc.response(res, 200, false, '', {
         order_id: invoiceValue,
         amount: result.data.data.totalAmount,
         payment_access: paymentAccess,
@@ -148,33 +144,31 @@ module.exports = {
     var items = await Order.orderItemByInvoiceValue(invoice_value);
     var payments = await Payment.getListByPaymentCode(payment_code);
 
-    if (typeof type != "undefined") {
-      app = "ATJ";
+    if (typeof type != 'undefined' || type != '') {
+      app = type;
     }
 
     try {
-      if (typeof payment_code == "undefined" || payment_code == "") {
-        throw new Error("Field payment_code is required");
+      if (typeof payment_code == 'undefined' || payment_code == '') {
+        throw new Error('Field payment_code is required');
       }
 
-      if (typeof channel_id == "undefined" || channel_id == "") {
-        throw new Error("Field channel_id is required");
+      if (typeof channel_id == 'undefined' || channel_id == '') {
+        throw new Error('Field channel_id is required');
       }
 
-      if (typeof invoice_value == "undefined" || invoice_value == "") {
-        throw new Error("Field invoice_value is required");
+      if (typeof invoice_value == 'undefined' || invoice_value == '') {
+        throw new Error('Field invoice_value is required');
       }
 
       if (items.length == 0) {
-        throw new Error("Invoice not found");
+        throw new Error('Invoice not found');
       }
 
-      var checkPaymentIsExist = await Payment.checkPaymentIsExist(
-        invoice_value
-      );
+      var checkPaymentIsExist = await Payment.checkPaymentIsExist(invoice_value);
 
       if (checkPaymentIsExist.length != 0) {
-        throw new Error("Invoice already registered");
+        throw new Error('Invoice already registered');
       }
 
       for (const item of items) {
@@ -192,7 +186,7 @@ module.exports = {
       };
 
       const config = {
-        method: "POST",
+        method: 'POST',
         url: process.env.PAY_MIDTRANS,
         data: payload,
       };
@@ -201,16 +195,16 @@ module.exports = {
 
       var paymentAccess, paymentType, paymentCode, paymentExpire;
 
-      if (["gopay", "shopee", "ovo", "dana"].includes(payment_code)) {
+      if (['gopay', 'shopee', 'ovo', 'dana'].includes(payment_code)) {
         paymentAccess = result.data.data.data.actions[0].url;
-        paymentType = "emoney";
+        paymentType = 'emoney';
         paymentExpire = moment()
-          .tz("Asia/Jakarta")
-          .add(30, "minutes")
-          .format("YYYY-MM-DD HH:mm:ss");
+          .tz('Asia/Jakarta')
+          .add(30, 'minutes')
+          .format('YYYY-MM-DD HH:mm:ss');
       } else {
         paymentAccess = result.data.data.data.vaNumber;
-        paymentType = "va";
+        paymentType = 'va';
         paymentExpire = result.data.data.expire;
       }
 
@@ -218,7 +212,7 @@ module.exports = {
 
       await sendEmail(
         app,
-        "Pembayaran",
+        'Pembayaran',
         email,
         utils.templateStoreMp(
           invoice_value,
@@ -226,14 +220,14 @@ module.exports = {
           paymentCode,
           paymentExpire,
           paymentType,
-          paymentAccess
+          paymentAccess,
         ),
-        "payment-merah-putih"
+        'payment-merah-putih',
       );
 
       // await Payment.updatePoIntoUnpaid(invoice_value);
 
-      misc.response(res, 200, false, "", {
+      misc.response(res, 200, false, '', {
         order_id: invoice_value,
         amount: result.data.data.totalAmount,
         payment_access: paymentAccess,
@@ -270,8 +264,8 @@ module.exports = {
     try {
       var invoiceValue =
         `JAMNASHTCI-` +
-        date.replace(/[^a-zA-Z0-9\s]/g, "") +
-        "-" +
+        date.replace(/[^a-zA-Z0-9\s]/g, '') +
+        '-' +
         (Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000);
 
       var dataPayment = {
@@ -300,12 +294,12 @@ module.exports = {
         channel_id: channel_id,
         orderId: invoiceValue,
         amount: 155000,
-        app: "JAMNASHTCI",
+        app: 'JAMNASHTCI',
         callbackUrl: callbackUrl,
       };
 
       var config = {
-        method: "POST",
+        method: 'POST',
         url: process.env.PAY_MIDTRANS,
         data: data,
       };
@@ -317,25 +311,25 @@ module.exports = {
       var paymentExpire;
 
       if (
-        payment_code == "gopay" ||
-        payment_code == "shopee" ||
-        payment_code == "ovo" ||
-        payment_code == "dana"
+        payment_code == 'gopay' ||
+        payment_code == 'shopee' ||
+        payment_code == 'ovo' ||
+        payment_code == 'dana'
       ) {
         paymentAccess = result.data.data.data.actions[0].url;
-        paymentType = "emoney";
+        paymentType = 'emoney';
 
         paymentExpire = moment()
-          .tz("Asia/Jakarta")
-          .add(30, "minutes")
-          .format("YYYY-MM-DD HH:mm:ss");
+          .tz('Asia/Jakarta')
+          .add(30, 'minutes')
+          .format('YYYY-MM-DD HH:mm:ss');
       } else {
         paymentAccess = result.data.data.data.vaNumber;
-        paymentType = "va";
+        paymentType = 'va';
         paymentExpire = result.data.data.expire;
       }
 
-      misc.response(res, 200, false, "", {
+      misc.response(res, 200, false, '', {
         order_id: invoiceValue,
         payment_access: paymentAccess,
         payment_type: paymentType,
