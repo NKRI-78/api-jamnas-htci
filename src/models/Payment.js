@@ -95,6 +95,37 @@ module.exports = {
     });
   },
 
+  storeIinbox: (data) => {
+    return new Promise((resolve, reject) => {
+      const query = `
+      INSERT INTO Payments 
+      (orderId, grossAmount, totalAmount, transactionStatus, transactionId, expire, app, data, callbackUrl, ChannelId, createdAt, updatedAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+    `;
+
+      const values = [
+        data.orderId,
+        data.grossAmount,
+        data.totalAmount,
+        data.transactionStatus,
+        data.transactionId,
+        data.expire,
+        data.app,
+        data.data,
+        data.callbackUrl,
+        data.channelId,
+      ];
+
+      connPayment.query(query, values, (e, result) => {
+        if (e) {
+          reject(e);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
+
   checkPaymentIsExist: (orderId) => {
     return new Promise((resolve, reject) => {
       const query = `SELECT orderId, totalAmount AS amount, ChannelId, data, expire FROM Payments WHERE orderId = ?`;

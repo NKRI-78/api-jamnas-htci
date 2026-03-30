@@ -2,11 +2,14 @@ const misc = require('../helpers/response');
 
 const moment = require('moment-timezone');
 
+const uid = require('uuid');
+
 const { sendEmail } = require('../helpers/utils');
 
 const User = require('../models/User');
 const Order = require('../models/Order');
 const utils = require('../helpers/utils');
+const Payment = require('../models/Payment');
 
 module.exports = {
   OrderMp: async (req, res) => {
@@ -63,6 +66,23 @@ module.exports = {
         user_id: userId,
       };
 
+      if (status == 3 || status == '3') {
+        var data = {
+          orderId: invoiceValue,
+          grossAmount: null,
+          totalAmount: amount,
+          transactionStatus: 'po',
+          transactionId: uid.v4(),
+          expire: null,
+          app: app.toUpperCase(),
+          data: null,
+          callbackUrl: null,
+          channelId: null,
+        };
+
+        await Payment.storeIinbox(data);
+      }
+
       const orderId = await Order.orderMp(orderData);
 
       const orderItems = [];
@@ -104,7 +124,7 @@ module.exports = {
         'merah-putih-order-confirmation',
       );
 
-      return misc.response(res, 200, false, 'Order created successfully', {
+      misc.response(res, 200, false, 'Order created successfully', {
         user: { id: userId, ...userData },
         order: { id: orderId, ...orderData },
         order_items: orderItems,
