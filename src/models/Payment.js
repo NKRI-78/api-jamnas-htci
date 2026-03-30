@@ -1,6 +1,6 @@
-const conn = require("../configs/db");
-const connPayment = require("../configs/db_payment");
-const connMP = require("../configs/db_web_merah_putih");
+const conn = require('../configs/db');
+const connPayment = require('../configs/db_payment');
+const connMP = require('../configs/db_web_merah_putih');
 
 module.exports = {
   getList: () => {
@@ -97,7 +97,7 @@ module.exports = {
 
   checkPaymentIsExist: (orderId) => {
     return new Promise((resolve, reject) => {
-      const query = `SELECT orderId, grossAmount AS amount, ChannelId, data, expire FROM Payments WHERE orderId = ?`;
+      const query = `SELECT orderId, totalAmount AS amount, ChannelId, data, expire FROM Payments WHERE orderId = ?`;
 
       const values = [orderId];
 
