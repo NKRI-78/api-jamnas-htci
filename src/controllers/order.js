@@ -71,7 +71,7 @@ module.exports = {
       //     orderId: invoiceValue,
       //     grossAmount: null,
       //     totalAmount: amount,
-      //     transactionStatus: 'po',
+      //     transactionStatus:` 'po',
       //     transactionId: uid.v4(),
       //     expire: null,
       //     app: app.toUpperCase(),
