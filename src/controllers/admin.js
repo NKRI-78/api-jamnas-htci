@@ -1,8 +1,8 @@
-const misc = require("../helpers/response");
-const Admin = require("../models/Admin");
-const Order = require("../models/Order");
-const Payment = require("../models/Payment");
-const User = require("../models/User");
+const misc = require('../helpers/response');
+const Admin = require('../models/Admin');
+const Order = require('../models/Order');
+const Payment = require('../models/Payment');
+const User = require('../models/User');
 
 module.exports = {
   UpdatePayment: async (req, res) => {
@@ -11,18 +11,18 @@ module.exports = {
     try {
       await Admin.updatePaymentPaid(status, order_id);
 
-      misc.response(res, 200, false, "", {
+      misc.response(res, 200, false, '', {
         order_id: order_id,
         status: status,
       });
     } catch (e) {
       console.error(e);
-      misc.response(res, 400, true, e.message || "Something went wrong");
+      misc.response(res, 400, true, e.message || 'Something went wrong');
     }
   },
 
   BalanceMp: async (req, res) => {
-    const { type } = req.query 
+    const { type } = req.query;
 
     try {
       // 1) Get all user balances
@@ -40,10 +40,10 @@ module.exports = {
       };
 
       // 4) Send response
-      misc.response(res, 200, false, "", result);
+      misc.response(res, 200, false, '', result);
     } catch (e) {
       console.error(e);
-      misc.response(res, 400, true, e.message || "Something went wrong");
+      misc.response(res, 400, true, e.message || 'Something went wrong');
     }
   },
   OrderListMp: async (req, res) => {
@@ -54,7 +54,7 @@ module.exports = {
       const orders = await Order.orderListMp(type);
 
       if (orders.length === 0) {
-        return misc.response(res, 200, false, "No orders found", []);
+        return misc.response(res, 200, false, 'No orders found', []);
       }
 
       // 2) Collect unique user_ids
@@ -67,6 +67,7 @@ module.exports = {
       const userMap = {};
       for (const user of users) {
         userMap[user.id] = {
+          id: user.id || null,
           name: user.name || null,
           phone: user.phone || null,
           email: user.email || null,
@@ -99,7 +100,7 @@ module.exports = {
 
         // Find if this product already exists in items[]
         let product = groupedOrders[orderId].items.find(
-          (item) => item.product_id === order.product_id
+          (item) => item.product_id === order.product_id,
         );
 
         if (!product) {
@@ -123,15 +124,10 @@ module.exports = {
 
       const dataOrder = Object.values(groupedOrders);
 
-      return misc.response(res, 200, false, "", dataOrder);
+      return misc.response(res, 200, false, '', dataOrder);
     } catch (error) {
       console.error(error);
-      return misc.response(
-        res,
-        400,
-        true,
-        error.message || "Something went wrong"
-      );
+      return misc.response(res, 400, true, error.message || 'Something went wrong');
     }
   },
 };
