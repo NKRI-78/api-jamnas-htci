@@ -1,21 +1,20 @@
-const misc = require("../helpers/response");
+const misc = require('../helpers/response');
 
-const moment = require("moment-timezone");
+const moment = require('moment-timezone');
 
-const { sendEmail } = require("../helpers/utils");
+const { sendEmail } = require('../helpers/utils');
 
-const User = require("../models/User");
-const Order = require("../models/Order");
+const User = require('../models/User');
+const Order = require('../models/Order');
 
 module.exports = {
   OrderMp: async (req, res) => {
-    const { email, name, club, status, date, address, phone, type, items } =
-      req.body;
+    const { email, name, club, amount, status, date, address, phone, type, items } = req.body;
 
-    var app = "MRHPUTIH";
+    var app = 'MRHPUTIH';
 
-    if (typeof type != "undefined") {
-      app = "ATJ";
+    if (typeof type != 'undefined' || type != '') {
+      app = type;
     }
 
     try {
@@ -32,8 +31,8 @@ module.exports = {
 
       for (const [field, value] of Object.entries(requiredFields)) {
         if (
-          typeof value === "undefined" ||
-          value === "" ||
+          typeof value === 'undefined' ||
+          value === '' ||
           (Array.isArray(value) && value.length === 0)
         ) {
           throw new Error(`Field ${field} is required`);
@@ -54,7 +53,7 @@ module.exports = {
 
       const orderData = {
         club: club.trim(),
-        date: moment(date).format("YYYY-MM-DD HH:mm:ss"),
+        date: moment(date).format('YYYY-MM-DD HH:mm:ss'),
         status: status.trim(),
         address: address.trim(),
         invoice_value: invoiceValue,
@@ -87,32 +86,31 @@ module.exports = {
         <ul>
           <li><strong>Invoice:</strong> ${invoiceValue}</li>
           <li><strong>Club:</strong> ${club}</li>
-          <li><strong>Status:</strong> ${status == "3" ? "PO" : "UNPAID"}</li>
-          <li><strong>Event Date:</strong> ${moment(date).format(
-            "YYYY-MM-DD HH:mm:ss"
-          )}</li>
+          <li><strong>Status:</strong> ${status == '3' ? 'PO' : 'UNPAID'}</li>
+          <li><strong>Event Date:</strong> ${moment(date).format('YYYY-MM-DD HH:mm:ss')}</li>
           <li><strong>Address:</strong> ${address}</li>
           <li><strong>Phone:</strong> ${phone}</li>
+          <li><strong>Nominal:</strong> ${amount}</li>
         </ul>
         <p>Regards,<br>${app}</p>
       `;
 
       await sendEmail(
         app,
-        "Your Order Confirmation",
+        'Your Order Confirmation',
         email,
         template,
-        "merah-putih-order-confirmation"
+        'merah-putih-order-confirmation',
       );
 
-      return misc.response(res, 200, false, "Order created successfully", {
+      return misc.response(res, 200, false, 'Order created successfully', {
         user: { id: userId, ...userData },
         order: { id: orderId, ...orderData },
         order_items: orderItems,
       });
     } catch (e) {
       console.error(e);
-      return misc.response(res, 400, true, e.message || "Something went wrong");
+      return misc.response(res, 400, true, e.message || 'Something went wrong');
     }
   },
 };
