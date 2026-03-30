@@ -49,7 +49,7 @@ module.exports = {
   getListByPaymentChannel: (id) => {
     return new Promise((resolve, reject) => {
       const query = `SELECT id, name, nameCode, logo, platform, fee FROM Channels WHERE id = ?`;
-      connPayment.query(query, id, (e, result) => {
+      connPayment.query(query, [id], (e, result) => {
         if (e) {
           reject(new Error(e));
         } else {
