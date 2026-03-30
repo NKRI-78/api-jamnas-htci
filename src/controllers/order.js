@@ -6,6 +6,7 @@ const { sendEmail } = require('../helpers/utils');
 
 const User = require('../models/User');
 const Order = require('../models/Order');
+const utils = require('../helpers/utils');
 
 module.exports = {
   OrderMp: async (req, res) => {
@@ -90,7 +91,7 @@ module.exports = {
           <li><strong>Event Date:</strong> ${moment(date).format('YYYY-MM-DD HH:mm:ss')}</li>
           <li><strong>Address:</strong> ${address}</li>
           <li><strong>Phone:</strong> ${phone}</li>
-          <li><strong>Nominal:</strong> ${amount}</li>
+          <li><strong>Nominal:</strong> ${utils.formatCurrency(amount)}</li>
         </ul>
         <p>Regards,<br>${app}</p>
       `;

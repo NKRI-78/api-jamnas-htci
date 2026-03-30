@@ -1,4 +1,4 @@
-const connMP = require("../configs/db_web_merah_putih");
+const connMP = require('../configs/db_web_merah_putih');
 
 module.exports = {
   orderListMpByEmail: (email, type) => {
@@ -122,10 +122,10 @@ module.exports = {
 
   orderMp: (data) => {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO orders (address, date, club, status, invoice_value, order_username, user_id, type) 
+      let query = `INSERT INTO orders (address, date, club, status, invoice_value, order_username, user_id, type) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
-      const values = [
+      var values = [
         data.address,
         data.date,
         data.club,
@@ -135,6 +135,23 @@ module.exports = {
         data.user_id,
         data.type,
       ];
+
+      if (data.type.toUpperCase() === 'HTCI') {
+        query = `INSERT INTO orders (amount, address, date, club, status, invoice_value, order_username, user_id, type) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
+        values = [
+          data.amount,
+          data.address,
+          data.date,
+          data.club,
+          data.status,
+          data.invoice_value,
+          data.user_name,
+          data.user_id,
+          data.type,
+        ];
+      }
 
       connMP.query(query, values, (e, result) => {
         if (e) {
