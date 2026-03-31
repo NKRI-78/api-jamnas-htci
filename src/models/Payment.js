@@ -187,4 +187,20 @@ module.exports = {
       });
     });
   },
+
+  updateInvoicePO: (invoiceValue) => {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE orders SET invoice_value = ? WHERE invoice_value = ?`;
+
+      const values = [`${invoiceValue}-PO`];
+
+      connMP.query(query, values, (e, result) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  },
 };

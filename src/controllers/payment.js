@@ -161,9 +161,7 @@ module.exports = {
         throw new Error('Field invoice_value is required');
       }
 
-      if (items.length == 0) {
-        throw new Error('Invoice not found');
-      }
+      if (items.length == 0) throw new Error('Invoice not found');
 
       // var checkPaymentIsExist = await Payment.checkPaymentIsExist(invoice_value);
 
@@ -225,7 +223,9 @@ module.exports = {
         'payment-merah-putih',
       );
 
-      await Payment.updatePoIntoUnpaid(invoice_value);
+      // await Payment.updatePoIntoUnpaid(invoice_value);
+
+      await Payment.updateInvoicePO(invoice_value);
 
       misc.response(res, 200, false, '', {
         order_id: invoice_value,
