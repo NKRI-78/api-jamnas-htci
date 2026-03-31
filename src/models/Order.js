@@ -170,7 +170,7 @@ module.exports = {
         o.id = (
           SELECT id 
           FROM orders 
-          WHERE user_id = u.id AND status = 1
+          WHERE user_id = u.id AND status = 1 OR 
           ORDER BY id DESC 
           LIMIT 1
         )
