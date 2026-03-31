@@ -115,12 +115,16 @@ module.exports = {
 
         const { date, time } = splitDateTime(createdAt);
 
+        var amount = 0;
+
         var rows = await Order.orderItemByOrderId(id);
 
         const products = [];
 
         for (const row of rows) {
           let product = products.find((p) => p.product_id === row.product_id);
+
+          amount = row.amount;
 
           if (!product) {
             product = {
@@ -140,7 +144,7 @@ module.exports = {
         }
 
         var payments = await Payment.checkPaymentIsExist(invoiceValue);
-        var amount = payments.length == 0 ? '0' : payments[0].amount;
+        var amount = payments.length == 0 ? amount : payments[0].amount;
         var channelId = payments.length == 0 ? '-' : payments[0].ChannelId;
         var expire = payments.length == 0 ? new Date() : payments[0].expire;
 

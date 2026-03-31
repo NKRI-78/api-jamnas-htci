@@ -44,6 +44,7 @@ module.exports = {
         p.img,
         sp.id AS size_id,
         sp.size,
+        SUM(sp.price) AS amount,
         SUM(oi.qty) AS qty
         FROM 
           order_items oi
@@ -55,21 +56,6 @@ module.exports = {
           p.id, p.title, p.img, sp.id, sp.size
         ORDER BY p.id DESC
       `;
-
-      // SELECT
-      //   p.id AS product_id,
-      //   p.title,
-      //   p.img,
-      //   GROUP_CONCAT(DISTINCT sp.size ORDER BY sp.size ASC) AS sizes,
-      //   GROUP_CONCAT(DISTINCT oi.qty ORDER BY oi.qty ASC) AS qtys
-      // FROM
-      //   order_items oi
-      //   INNER JOIN products p ON p.id = oi.product_id
-      //   INNER JOIN size_prices sp ON sp.id = oi.size_id
-      // WHERE
-      //   oi.order_id = ?
-      // GROUP BY
-      //   p.id, p.title, p.img
 
       const values = [orderId];
 
