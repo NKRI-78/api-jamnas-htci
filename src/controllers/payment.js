@@ -228,7 +228,7 @@ module.exports = {
       await Payment.updateInvoicePO(invoice_value);
 
       misc.response(res, 200, false, '', {
-        order_id: invoice_value,
+        order_id: `${invoice_value}-PO`,
         amount: result.data.data.totalAmount,
         payment_access: paymentAccess,
         payment_type: paymentType,
