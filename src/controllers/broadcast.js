@@ -23,9 +23,6 @@ const buildPreorderMessage = (item) => {
           <tr><td style="padding:8px;border:1px solid #ddd;"><b>Tanggal Pemesanan</b></td><td style="padding:8px;border:1px solid #ddd;">${orderDate}</td></tr>
           <tr><td style="padding:8px;border:1px solid #ddd;"><b>No Handphone</b></td><td style="padding:8px;border:1px solid #ddd;">${phone}</td></tr>
         </table>
-        <p>Usahakan bayar sebelum <b>${due}</b> ya kak, biar pesanan kakak bisa cepat diproses.<br/>
-        Kalau sudah transfer, jangan lupa kirim bukti yaa / Bayar langsung di apps (Otomatis).</p>
-        <p>Makasih banyak kak!</p>
         <p><a href="${payLink}" style="display:inline-block;padding:10px 14px;background:#E91E63;color:#fff;text-decoration:none;border-radius:6px;">Lanjut Pembayaran</a></p>
       </div>
     `,
