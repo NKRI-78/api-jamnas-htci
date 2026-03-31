@@ -124,7 +124,7 @@ module.exports = {
         for (const row of rows) {
           let product = products.find((p) => p.product_id === row.product_id);
 
-          amount = row.amount;
+          amount += row.amount;
 
           if (!product) {
             product = {
