@@ -32,6 +32,16 @@ module.exports = {
     });
   },
 
+  deleteBroadcast: (email) => {
+    return new Promise((resolve, reject) => {
+      const query = `DELETE FROM broadcasts WHERE status = ? AND email = ?`;
+      conn.query(query, ['PO', email], (e, result) => {
+        if (e) reject(new Error(e));
+        else resolve(result);
+      });
+    });
+  },
+
   listBroadcast: ({ page = 1, limit = 20, search = '', status = '', user_id = '' }) => {
     return new Promise((resolve, reject) => {
       const safePage = Math.max(parseInt(page, 10) || 1, 1);

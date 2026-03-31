@@ -1,4 +1,4 @@
-const connMP = require("../configs/db_web_merah_putih");
+const connMP = require('../configs/db_web_merah_putih');
 
 module.exports = {
   orderListMpByEmail: (email, type) => {
@@ -108,6 +108,7 @@ module.exports = {
       INNER JOIN products p ON p.id = oi.product_id
       INNER JOIN size_prices sp ON sp.id = oi.size_id
       WHERE o.type = ?
+        AND o.invoice_value NOT LIKE '%-PO'
       ORDER BY o.id DESC
     `;
 

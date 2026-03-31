@@ -101,9 +101,7 @@ module.exports = {
     try {
       var orders = await Order.orderListMpByInvoiceValue(order_id);
 
-      if (orders.length == 0) {
-        throw new Error('Order Detail not found');
-      }
+      if (orders.length == 0) throw new Error('Order Detail not found');
 
       var dataOrder = [];
 

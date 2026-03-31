@@ -8,6 +8,7 @@ const Payment = require('../models/Payment');
 const Order = require('../models/Order');
 const { sendEmail } = require('../helpers/utils');
 const utils = require('../helpers/utils');
+const Broadcast = require('../models/Broadcast');
 
 module.exports = {
   getList: async (_, res) => {
@@ -224,6 +225,8 @@ module.exports = {
       );
 
       // await Payment.updatePoIntoUnpaid(invoice_value);
+
+      await Broadcast.deleteBroadcast(email);
 
       await Payment.updateInvoicePO(invoice_value);
 
