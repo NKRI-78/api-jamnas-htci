@@ -69,8 +69,8 @@ module.exports = {
       if (status == 3 || status == '3') {
         var data = {
           orderId: invoiceValue,
-          grossAmount: null,
-          totalAmount: amount,
+          grossAmount: amount,
+          totalAmount: 0,
           transactionStatus: 'po',
           transactionId: uid.v4(),
           expire: null,
