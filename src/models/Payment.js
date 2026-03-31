@@ -192,7 +192,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       const query = `UPDATE orders SET invoice_value = ? WHERE invoice_value = ?`;
 
-      const values = [`${invoiceValue}-PO`];
+      const values = [`${invoiceValue}-PO`, invoiceValue];
 
       connMP.query(query, values, (e, result) => {
         if (e) {
