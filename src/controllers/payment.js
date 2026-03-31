@@ -179,7 +179,7 @@ module.exports = {
 
       const payload = {
         channel_id: channel_id,
-        orderId: invoice_value,
+        orderId: `${invoice_value}-PO`,
         amount: totalAmount,
         app: app,
         callbackUrl: callbackUrl,
@@ -225,7 +225,7 @@ module.exports = {
         'payment-merah-putih',
       );
 
-      // await Payment.updatePoIntoUnpaid(invoice_value);
+      await Payment.updatePoIntoUnpaid(invoice_value);
 
       misc.response(res, 200, false, '', {
         order_id: invoice_value,
