@@ -50,20 +50,15 @@ module.exports = {
     const { type } = req.query;
 
     try {
-      // 1) Get all orders
       const orders = await Order.orderListMp(type);
 
       if (orders.length === 0) {
         return misc.response(res, 200, false, 'No orders found', []);
       }
 
-      // 2) Collect unique user_ids
       const userIds = [...new Set(orders.map((order) => order.user_id))];
-
-      // 3) Batch fetch users by IDs
       const users = userIds.length > 0 ? await User.getUsersMp(userIds) : [];
 
-      // 4) Map users by ID for fast lookup
       const userMap = {};
       for (const user of users) {
         userMap[user.id] = {
@@ -74,11 +69,12 @@ module.exports = {
         };
       }
 
-      // 5) Group orders by order_id and merge products with measures
       const groupedOrders = {};
 
       for (const order of orders) {
         const orderId = order.id;
+        const qty = parseInt(order.item_qty, 10) || 0;
+        const price = parseInt(order.size_price, 10) || 0;
 
         if (!groupedOrders[orderId]) {
           groupedOrders[orderId] = {
@@ -94,17 +90,19 @@ module.exports = {
               phone: null,
               email: null,
             },
+            total: 0, // ← di luar items
             items: [],
           };
         }
 
-        // Find if this product already exists in items[]
+        // akumulasi total
+        groupedOrders[orderId].total += qty * price;
+
         let product = groupedOrders[orderId].items.find(
           (item) => item.product_id === order.product_id,
         );
 
         if (!product) {
-          // If not found, create it
           product = {
             product_id: order.product_id,
             title: order.product_title,
@@ -114,11 +112,10 @@ module.exports = {
           groupedOrders[orderId].items.push(product);
         }
 
-        // Push this measure
         product.measures.push({
           size: order.size_name,
-          qty: parseInt(order.item_qty, 10),
-          price: parseInt(order.size_price, 10),
+          qty,
+          price,
         });
       }
 
