@@ -9,7 +9,7 @@ const buildPreorderMessage = (item) => {
   const phone = item.phone;
   const due = '[batas waktu]';
 
-  const payLink = `https://merchandise-htcidkijakarta.langitdigital78.com/payment/${orderNo}`;
+  const payLink = `https://merchandise-htcidkijakarta.langitdigital78.com/payment/${orderNo}-PO`;
 
   return {
     text: `Halo kak,\n\nMakasih ya sudah pre-order. Pesanannya sudah siap diproses nih.\nYuk langsung lanjut pembayaran dulu ya:\n\nNo Pesanan : ${orderNo}\nTotal : ${formatCurrency(total)}\nTanggal Pemesanan : ${orderDate}\nNo Handphone : ${phone}\n\nUsahakan bayar sebelum ${due} ya kak, biar pesanan kakak bisa cepat diproses.\nKalau sudah transfer, jangan lupa kirim bukti yaa / Bayar langsung di apps (Otomatis).\n\nMakasih banyak kak!\nLink: ${payLink}`,
