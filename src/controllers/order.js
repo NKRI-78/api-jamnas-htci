@@ -9,6 +9,7 @@ const { sendEmail } = require('../helpers/utils');
 const User = require('../models/User');
 const Order = require('../models/Order');
 const utils = require('../helpers/utils');
+const Payment = require('../models/Payment');
 
 module.exports = {
   OrderMp: async (req, res) => {
@@ -65,22 +66,22 @@ module.exports = {
         user_id: userId,
       };
 
-      // if (status == 3 || status == '3') {
-      //   var data = {
-      //     orderId: invoiceValue,
-      //     grossAmount: null,
-      //     totalAmount: amount,
-      //     transactionStatus:` 'po',
-      //     transactionId: uid.v4(),
-      //     expire: null,
-      //     app: app.toUpperCase(),
-      //     data: null,
-      //     callbackUrl: null,
-      //     channelId: null,
-      //   };
+      if (status == 3 || status == '3') {
+        var data = {
+          orderId: invoiceValue,
+          grossAmount: null,
+          totalAmount: amount,
+          transactionStatus: 'po',
+          transactionId: uid.v4(),
+          expire: null,
+          app: app.toUpperCase(),
+          data: null,
+          callbackUrl: null,
+          channelId: null,
+        };
 
-      //   await Payment.storeIinbox(data);
-      // }
+        await Payment.storeIinbox(data);
+      }
 
       const orderId = await Order.orderMp(orderData);
 
