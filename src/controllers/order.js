@@ -9,7 +9,6 @@ const { sendEmail } = require('../helpers/utils');
 const User = require('../models/User');
 const Order = require('../models/Order');
 const utils = require('../helpers/utils');
-const Payment = require('../models/Payment');
 
 module.exports = {
   OrderMp: async (req, res) => {
