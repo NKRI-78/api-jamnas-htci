@@ -164,11 +164,11 @@ module.exports = {
 
       if (items.length == 0) throw new Error('Invoice not found');
 
-      // var checkPaymentIsExist = await Payment.checkPaymentIsExist(invoice_value);
+      var checkPaymentIsExist = await Payment.checkPaymentIsExist(invoice_value);
 
-      // if (checkPaymentIsExist.length != 0) {
-      //   throw new Error('Invoice already registered');
-      // }
+      if (checkPaymentIsExist.length != 0) {
+        await Payment.updateInvoicePO(invoice_value);
+      }
 
       for (const item of items) {
         totalAmount += item.price * item.qty;
