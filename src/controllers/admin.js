@@ -127,4 +127,28 @@ module.exports = {
       return misc.response(res, 400, true, error.message || 'Something went wrong');
     }
   },
+
+  OrderDelete: async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      if (!id) {
+        throw new Error('Field id is required');
+      }
+
+      const result = await Order.orderDelete(id);
+
+      if (!result || result.affectedRows === 0) {
+        return misc.response(res, 404, true, 'Order not found');
+      }
+
+      misc.response(res, 200, false, 'Order deleted', {
+        id,
+        affected_rows: result.affectedRows,
+      });
+    } catch (e) {
+      console.error(e);
+      misc.response(res, 400, true, e.message || 'Something went wrong');
+    }
+  },
 };
