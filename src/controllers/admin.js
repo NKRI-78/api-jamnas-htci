@@ -76,6 +76,14 @@ module.exports = {
         const qty = parseInt(order.item_qty, 10) || 0;
         const price = parseInt(order.size_price, 10) || 0;
 
+        var payments = await Payment.checkPaymentIsExist(order.invoice_value);
+
+        var methodPayment;
+
+        if (payments.length != 0) {
+          methodPayment = await Payment.getListByPaymentChannel(payments[0].ChannelId);
+        }
+
         if (!groupedOrders[orderId]) {
           groupedOrders[orderId] = {
             id: orderId,
@@ -85,6 +93,7 @@ module.exports = {
             date: order.date,
             club: order.club,
             order_username: order.order_username,
+            payment: methodPayment.length > 0 ? methodPayment[0].name : '',
             user: userMap[order.user_id] || {
               name: null,
               phone: null,
