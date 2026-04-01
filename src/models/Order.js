@@ -107,7 +107,6 @@ module.exports = {
       INNER JOIN products p ON p.id = oi.product_id
       INNER JOIN size_prices sp ON sp.id = oi.size_id
       WHERE o.type = ?
-        AND o.invoice_value NOT LIKE '%-PO'
       ORDER BY o.id DESC
     `;
 
