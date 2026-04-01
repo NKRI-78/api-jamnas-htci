@@ -1,6 +1,19 @@
 const connMP = require('../configs/db_web_merah_putih');
 
 module.exports = {
+  orderDelete: (id) => {
+    return new Promise((resolve, reject) => {
+      const query = `DELETE FROM orders WHERE id = ?`;
+
+      connMP.query(query, [id], (e, results) => {
+        if (e) {
+          reject(new Error(e));
+        } else {
+          resolve(results);
+        }
+      });
+    });
+  },
   orderListMpByEmail: (email, type) => {
     return new Promise((resolve, reject) => {
       const query = `SELECT o.id, o.invoice_value, o.created_at, os.name AS status
