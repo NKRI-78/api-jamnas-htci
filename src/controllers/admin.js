@@ -93,7 +93,12 @@ module.exports = {
             date: order.date,
             club: order.club,
             order_username: order.order_username,
-            payment: methodPayment.length > 0 ? methodPayment[0].name : '',
+            payment:
+              typeof methodPayment == 'undefined'
+                ? ''
+                : methodPayment.length > 0
+                  ? methodPayment[0].name
+                  : '',
             user: userMap[order.user_id] || {
               name: null,
               phone: null,
