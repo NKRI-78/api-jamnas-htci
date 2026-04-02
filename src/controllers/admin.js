@@ -93,6 +93,12 @@ module.exports = {
             date: order.date,
             club: order.club,
             order_username: order.order_username,
+            expired:
+              payments.length > 0
+                ? payments[0].transactionStatus == 'expire'
+                  ? true
+                  : false
+                : false,
             payment:
               typeof methodPayment == 'undefined'
                 ? ''
